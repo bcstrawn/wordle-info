@@ -13,6 +13,7 @@ export class FetchData extends Component {
     this.processGuesses = this.processGuesses.bind(this);
     this.processSecondGuesses = this.processSecondGuesses.bind(this);
     this.toggleSecondGuess = this.toggleSecondGuess.bind(this);
+    this.getLetters = this.getLetters.bind(this);
 
     this.handleChange = this.handleChange.bind(this);
     this.handleChange2 = this.handleChange2.bind(this);
@@ -66,6 +67,7 @@ export class FetchData extends Component {
         <button className="btn btn-primary" onClick={this.toggleSecondGuess} style={{ "marginRight": "5px" }}>{this.state.second ? 'Regular' : 'Second'}</button>
 
         <input type="text" value={this.state.search} onChange={this.handleChange} placeholder='Search' />
+        <button className="btn btn-primary" onClick={this.getLetters} style={{ "marginRight": "5px" }}>Letters</button>
 
         {contents}
       </div>
@@ -102,6 +104,12 @@ export class FetchData extends Component {
     const response = await fetch('weatherforecast/Count');
     const data = await response.json();
     console.log(data);
+  }
+
+  async getLetters() {
+    const response = await fetch('weatherforecast/GetLetters');
+    const data = await response.json();
+    this.setState({ guesses: data, loading: false });
   }
 
   async importGuesses() {

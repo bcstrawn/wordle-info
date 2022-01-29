@@ -245,6 +245,46 @@ public class WeatherForecastController : ControllerBase
         }
 
         Console.WriteLine("Done processing second guesses");
+
+        /* yellows
+        C - DITCH
+        A - ALONG or TALON (ALOIN)
+        R - PROUD (DROIT)
+        E - NOBLE (TOILE)
+        S - TOILS (HOIST)
+        CA - FOCAL
+        */
+    }
+
+    [HttpGet]
+    public IEnumerable<Guess> GetLetters(Sort sort)
+    {
+        var vocab = _context.Vocab.Select(v => v.Value).ToList();
+        var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var dictionary = new Dictionary<char, int>();
+        
+        foreach (var letter in letters)
+        {
+            dictionary.Add(letter, 0);
+        }
+
+        foreach (var word in vocab)
+        {
+            var letterSet = word.ToHashSet();
+            
+            foreach (var letter in letterSet)
+            {
+                dictionary[letter] += 1;
+            }
+        }
+
+        var result = dictionary.Select(x => new Guess {
+            Id = (int)x.Key,
+            Value = x.Key.ToString(),
+            AverageGreen = x.Value
+        }).OrderByDescending(x => x.AverageGreen);
+
+        return result;
     }
 
     public enum Sort
